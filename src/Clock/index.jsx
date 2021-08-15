@@ -16,6 +16,7 @@ const Clock = observer(({ size }) => {
 
   useEffect(() => {
       let prev = null;
+      let requestId = null;
 
       const action = (timestamp) => {
         if (!prev || timestamp - prev >= INTERVAL) {
@@ -23,11 +24,17 @@ const Clock = observer(({ size }) => {
           timer.setDate(new Date());
         }
 
-        window.requestAnimationFrame(action);
+         requestId = window.requestAnimationFrame(action);
       }
 
-      window.requestAnimationFrame(action);
-    }, [])
+      requestId = window.requestAnimationFrame(action);
+
+      return () => {
+        if(requestId !== null) {
+          window.cancelAnimationFrame(requestId);
+        }
+      }
+    }, [timer])
 
   const center = size / 2;
   const circleRadius = center - CIRCLE_SROKE_WIDTH / 2 - SCREEN_PADDING;
