@@ -9,7 +9,7 @@ import Arrow from './Arrow';
 const HourArrow = observer(({radius, ...props}) => {
   const timer = useTimer();
 
-  return <Arrow {...props} length={HOUR_ARROW_INDEX * radius} width={HOUR_ARROW_WIDTH} shouldRounded angle={timer.hourAngle} />
+  return <Arrow {...props} length={HOUR_ARROW_INDEX * radius} width={HOUR_ARROW_WIDTH} shouldRounded angle={timer.hourAngle} />;
 });
 
 HourArrow.propTypes = {
