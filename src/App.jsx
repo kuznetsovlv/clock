@@ -18,7 +18,7 @@ export default () => {
 
     window.addEventListener('resize', eventListener, false);
 
-    return () => window.removeEventListenr('resize', eventListener);
+    return () => window.removeEventListener('resize', eventListener);
   }, [])
 
   return (
