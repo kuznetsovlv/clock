@@ -17,7 +17,7 @@ export default () => {
 
     window.addEventListener('resize', eventListener, false);
 
-    return () => window.removeEventListenr('resize', eventListener);
+    return () => window.removeEventListener('resize', eventListener);
   }, [])
 
   //TODO: Временнй код для проверки анимации до подключения mobX
