@@ -1,25 +1,40 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { observer } from 'mobx-react-lite';
 
-import { INTERVAL, CIRCLE_SROKE_WIDTH, SCREEN_PADDING } from '../constants'
+import {
+  INTERVAL,
+  CIRCLE_SROKE_WIDTH,
+  SCREEN_PADDING
+} from '../constants';
+import { useTimer } from '../TimerContextProvider';
 import ClockFace from './ClockFace';
 import Arrows from './Arrows/';
 
-const Clock = ({ size, date, onDateChange }) => {
+const Clock = observer(({ size }) => {
+  const timer = useTimer();
+
   useEffect(() => {
       let prev = null;
+      let requestId = null;
 
       const action = (timestamp) => {
         if (!prev || timestamp - prev >= INTERVAL) {
           prev = timestamp;
-          onDateChange(new Date());
+          timer.setDate(new Date());
         }
 
-        window.requestAnimationFrame(action);
+         requestId = window.requestAnimationFrame(action);
       }
 
-      window.requestAnimationFrame(action);
-    }, [])
+      requestId = window.requestAnimationFrame(action);
+
+      return () => {
+        if(requestId !== null) {
+          window.cancelAnimationFrame(requestId);
+        }
+      }
+    }, [timer])
 
   const center = size / 2;
   const circleRadius = center - CIRCLE_SROKE_WIDTH / 2 - SCREEN_PADDING;
@@ -27,15 +42,11 @@ const Clock = ({ size, date, onDateChange }) => {
   return (
      <>
       <ClockFace radius={circleRadius} x0={center} y0={center} />
-      <Arrows radius={circleRadius} x0={center} y0={center} date={date} />
+      <Arrows radius={circleRadius} x0={center} y0={center} />
     </>
     );
-}
+});
 
-Clock.propTypes = {
-  size: PropTypes.number.isRequired,
-  date: PropTypes.instanceOf(Date).isRequired,
-  onDateChange: PropTypes.func.isRequired
-};
+Clock.propTypes = { size: PropTypes.number.isRequired };
 
 export default Clock;
